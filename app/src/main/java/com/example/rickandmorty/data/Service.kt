@@ -2,6 +2,7 @@ package com.example.rickandmorty.data
 
 import com.example.rickandmorty.data.characters.Characters
 import com.example.rickandmorty.data.characters.Character
+import com.example.rickandmorty.data.episodes.Episodes
 import com.example.rickandmorty.data.locations.Location
 import com.example.rickandmorty.data.locations.Locations
 import retrofit2.Call
@@ -40,5 +41,8 @@ interface Service {
 
     @GET("location/{id}")
     fun getSingleLocation(@Path("id") id: Int): Call<Location>
+
+    @GET("episode")
+    fun getAllEpisodes(@Query("page") page: Int): Call<Episodes>
 
 }
