@@ -37,7 +37,6 @@ class CharactersFragment: BaseFragment<FragmentCharactersBinding, CharactersPres
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setUI() = with(binding) {
-        hideBackButton()
         val itemDecoration = DividerItemDecoration(this@CharactersFragment.context, LinearLayoutManager.VERTICAL).also {
             it.setDrawable(resources.getDrawable(R.drawable.characters_item_divider))
         }
