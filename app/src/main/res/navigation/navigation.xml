@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/charactersFragment"
         android:name="com.example.rickandmorty.presentation.fragments.CharactersFragment"
-        android:label="fragment_characters"
+        android:label="Characters"
         tools:layout="@layout/fragment_characters" />
 </navigation>
