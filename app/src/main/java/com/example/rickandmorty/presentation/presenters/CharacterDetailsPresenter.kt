@@ -40,6 +40,11 @@ class CharacterDetailsPresenter: BasePresenter<CharacterDetailsPresenter.Charact
         view?.onCharacterUpdate(character ?: return)
     }
 
+    fun onPickEpisode(episode: Episode){
+        //Saving
+        //view?.onNavigateTo()
+    }
+
     private fun loadEpisodes(ids: String){
         service.getMultipleEpisodes(ids).enqueue(object: retrofit2.Callback<List<Episode>>{
             override fun onResponse(call: Call<List<Episode>>, response: Response<List<Episode>>) {
@@ -84,5 +89,6 @@ class CharacterDetailsPresenter: BasePresenter<CharacterDetailsPresenter.Charact
         fun onEpisodesUpdates(newEpisodes: List<Episode>)
         fun onCharacterUpdate(newCharacter: Character)
         fun onToast(message: String)
+        fun onNavigateTo(destination: Int)
     }
 }

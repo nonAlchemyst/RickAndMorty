@@ -16,15 +16,18 @@ import com.example.rickandmorty.presentation.adapters.common.Orientation
 class EpisodesAdapter(private val orientation: Orientation = Orientation.VERTICAL): RecyclerView.Adapter<EpisodesAdapter.Holder>() {
 
     private var episodes = emptyList<Episode>()
+    private var onPickListener: ((Episode) -> Unit)? = null
 
     abstract class Holder(view: View): ViewHolder(view){
-        abstract fun bind(episode: Episode)
+        open fun bind(episode: Episode, onPickListener: ((Episode) -> Unit)? = null){
+            itemView.setOnClickListener { onPickListener?.invoke(episode) }
+        }
     }
 
     class HolderVertical(private val binding: EpisodesItemBinding): Holder(binding.root){
 
         @SuppressLint("SetTextI18n")
-        override fun bind(episode: Episode) = with(binding) {
+        override fun bind(episode: Episode, onPickListener: ((Episode) -> Unit)?) = with(binding) {
             val stringUtils = root.context
             this.name.text = "${stringUtils.getString(R.string.name)}: ${episode.name}"
             this.episode.text = "${stringUtils.getString(R.string.dimension)}: ${episode.episode}"
@@ -34,7 +37,7 @@ class EpisodesAdapter(private val orientation: Orientation = Orientation.VERTICA
 
     class HolderHorizontal(private val binding: EpisodesHorizontalItemBinding): Holder(binding.root){
 
-        override fun bind(episode: Episode) = with(binding) {
+        override fun bind(episode: Episode, onPickListener: ((Episode) -> Unit)?) = with(binding) {
             this.episode.text = episode.episode
         }
 
@@ -62,6 +65,10 @@ class EpisodesAdapter(private val orientation: Orientation = Orientation.VERTICA
     fun update(newEpisodes: List<Episode>){
         episodes = newEpisodes
         notifyDataSetChanged()
+    }
+
+    fun addOnPickListener(onPick: (Episode) -> Unit){
+        onPickListener = onPick
     }
 
 }

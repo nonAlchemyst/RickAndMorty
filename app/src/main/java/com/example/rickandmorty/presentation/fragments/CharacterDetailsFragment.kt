@@ -57,8 +57,13 @@ class CharacterDetailsFragment: BaseFragment<FragmentCharacterDetailsBinding, Ch
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onNavigateTo(destination: Int) {
+        navigateTo(destination)
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setUI() = with(binding) {
+        adapter.addOnPickListener { presenter.onPickEpisode(it) }
         val itemDecoration = DividerItemDecoration(this@CharacterDetailsFragment.context, LinearLayoutManager.HORIZONTAL).also {
             it.setDrawable(resources.getDrawable(R.drawable.divider_16_horizontal))
         }
