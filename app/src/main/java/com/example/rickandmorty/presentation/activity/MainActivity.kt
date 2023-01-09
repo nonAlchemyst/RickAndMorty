@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolbar)
+
         setupNavigation()
     }
 
@@ -27,11 +27,11 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.characters_menu_item, R.id.locations_menu_item, R.id.episodes_menu_item
+                R.id.charactersFragment, R.id.locationsFragment, R.id.episodesFragment
             )
         )
+        toolbar.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navigation.setupWithNavController(navController)
-        toolbar.setupWithNavController(navController)
     }
 }
