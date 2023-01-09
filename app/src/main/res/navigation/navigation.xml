@@ -23,4 +23,10 @@
         android:label="Episodes"
         tools:layout="@layout/fragment_episodes"/>
 
+    <fragment
+        android:id="@+id/characterDetailsFragment"
+        android:name="com.example.rickandmorty.presentation.fragments.CharacterDetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_character_details"/>
+
 </navigation>

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.viewbinding.ViewBinding
 import com.example.rickandmorty.presentation.presenters.base.BasePresenter
 
@@ -13,6 +15,7 @@ open class BaseFragment<T: ViewBinding, E: BasePresenter<R>,  R: BasePresenter.I
     private lateinit var _binding: T
     private lateinit var bindingInitializer: (LayoutInflater) -> T
     private lateinit var _presenter: E
+    private var navController: NavController? = null
 
     val binding
         get() = _binding
@@ -25,6 +28,15 @@ open class BaseFragment<T: ViewBinding, E: BasePresenter<R>,  R: BasePresenter.I
 
     fun setPresenter(presenter: E){
         _presenter = presenter
+    }
+
+    fun navigateTo(destination: Int){
+        navController?.navigate(destination)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        navController = findNavController(this)
     }
 
     override fun onCreateView(
@@ -47,7 +59,7 @@ open class BaseFragment<T: ViewBinding, E: BasePresenter<R>,  R: BasePresenter.I
     }
 
     private fun thisToView(): R{
-        return (this as? R)?.let { it } ?: throw java.lang.Exception("Type error between fragment and presenter")
+        return (this as? R) ?: throw java.lang.Exception("Type error between fragment and presenter")
     }
 
 //    fun <T> MutableLiveData<T>.onChanged(block: (it: T?) -> Unit) {
