@@ -1,6 +1,8 @@
 package com.example.rickandmorty.presentation.presenters
 
 import android.util.Log
+import com.example.rickandmorty.R
+import com.example.rickandmorty.data.Global
 import com.example.rickandmorty.data.ServiceBuilder
 import com.example.rickandmorty.data.characters.Character
 import com.example.rickandmorty.data.locations.Location
@@ -8,6 +10,7 @@ import com.example.rickandmorty.data.locations.Locations
 import com.example.rickandmorty.presentation.presenters.base.BasePresenter
 import retrofit2.Call
 import retrofit2.Response
+import com.example.rickandmorty.presentation.presenters.common.getIdsFromUrls
 
 class CharactersPresenter : BasePresenter<CharactersPresenter.CharactersView>() {
 
@@ -30,6 +33,9 @@ class CharactersPresenter : BasePresenter<CharactersPresenter.CharactersView>() 
     }
 
     fun loadFilters(){
+        if(filters.isNotEmpty()){
+            view?.onFiltersLoad(filters.map { it.second })
+        }
         loadAllFilters(1)
     }
 
@@ -40,6 +46,12 @@ class CharactersPresenter : BasePresenter<CharactersPresenter.CharactersView>() 
 
     fun loadCharactersByLocationName(name: String){
         loadLocationByName(name)
+    }
+
+    fun onPickCharacter(character: Character){
+        //saving
+        Global.setPickedCharacter(character)
+        view?.onNavigateTo(R.id.characterDetailsFragment)
     }
 
     private fun loadAllFilters(page: Int){
@@ -109,9 +121,9 @@ class CharactersPresenter : BasePresenter<CharactersPresenter.CharactersView>() 
                     return
                 response.body()?.let {
                     if(it.residents.size > 1)
-                        loadCharactersByIds(getIdsFromResidentUrl(it.residents))
+                        loadCharactersByIds(getIdsFromUrls(it.residents))
                     else if(it.residents.size == 1)
-                        loadCharacterById(getIdsFromResidentUrl(it.residents))
+                        loadCharacterById(getIdsFromUrls(it.residents))
                     else
                         view?.onCharactersUpdate(emptyList())
                 }
@@ -124,35 +136,14 @@ class CharactersPresenter : BasePresenter<CharactersPresenter.CharactersView>() 
         })
     }
 
-    private fun getIdsFromResidentUrl(urls: List<String>): String{
-        val ids = urls.map { url ->
-            val index = url.lastIndexOf("/")
-            if(index + 1 <= url.lastIndex)
-                url.substring(index + 1)
-            else
-                ""
-        }
-        return ids.toString1()
-    }
-
     private fun getFiltersFromLocations(locations: List<Location>): List<Pair<Int, String>>{
         return locations.map { Pair(it.id, it.name) }
-    }
-
-    fun<T> List<T>.toString1(): String{
-        val output = java.lang.StringBuilder()
-        val lastIndex = this.lastIndex
-        this.forEachIndexed { index, t ->
-            output.append(t)
-            if(index != lastIndex)
-                output.append(",")
-        }
-        return output.toString()
     }
 
     interface CharactersView: IView {
         fun onFiltersLoad(filters: List<String>)
         fun onCharactersUpdate(newCharacters: List<Character>)
         fun onToast(message: String)
+        fun onNavigateTo(destination: Int)
     }
 }

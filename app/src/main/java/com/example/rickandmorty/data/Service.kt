@@ -2,6 +2,7 @@ package com.example.rickandmorty.data
 
 import com.example.rickandmorty.data.characters.Characters
 import com.example.rickandmorty.data.characters.Character
+import com.example.rickandmorty.data.episodes.Episode
 import com.example.rickandmorty.data.episodes.Episodes
 import com.example.rickandmorty.data.locations.Location
 import com.example.rickandmorty.data.locations.Locations
@@ -44,5 +45,11 @@ interface Service {
 
     @GET("episode")
     fun getAllEpisodes(@Query("page") page: Int): Call<Episodes>
+
+    @GET("episode/{ids}")
+    fun getMultipleEpisodes(@Path("ids") ids: String): Call<List<Episode>>
+
+    @GET("episode/{id}")
+    fun getSingleEpisode(@Path("id") id: Int): Call<Episode>
 
 }

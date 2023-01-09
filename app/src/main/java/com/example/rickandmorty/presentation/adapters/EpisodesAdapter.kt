@@ -2,20 +2,32 @@ package com.example.rickandmorty.presentation.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.rickandmorty.R
 import com.example.rickandmorty.data.episodes.Episode
+import com.example.rickandmorty.databinding.EpisodesHorizontalItemBinding
 import com.example.rickandmorty.databinding.EpisodesItemBinding
+import com.example.rickandmorty.presentation.adapters.common.Orientation
 
-class EpisodesAdapter: RecyclerView.Adapter<EpisodesAdapter.Holder>() {
+class EpisodesAdapter(private val orientation: Orientation = Orientation.VERTICAL): RecyclerView.Adapter<EpisodesAdapter.Holder>() {
 
     private var episodes = emptyList<Episode>()
+    private var onPickListener: ((Episode) -> Unit)? = null
 
-    class Holder(private val binding: EpisodesItemBinding): RecyclerView.ViewHolder(binding.root){
+    abstract class Holder(view: View): ViewHolder(view){
+        open fun bind(episode: Episode, onPickListener: ((Episode) -> Unit)? = null){
+            itemView.setOnClickListener { onPickListener?.invoke(episode) }
+        }
+    }
+
+    class HolderVertical(private val binding: EpisodesItemBinding): Holder(binding.root){
 
         @SuppressLint("SetTextI18n")
-        fun bind(episode: Episode) = with(binding) {
+        override fun bind(episode: Episode, onPickListener: ((Episode) -> Unit)?) = with(binding) {
             val stringUtils = root.context
             this.name.text = "${stringUtils.getString(R.string.name)}: ${episode.name}"
             this.episode.text = "${stringUtils.getString(R.string.dimension)}: ${episode.episode}"
@@ -23,9 +35,24 @@ class EpisodesAdapter: RecyclerView.Adapter<EpisodesAdapter.Holder>() {
 
     }
 
+    class HolderHorizontal(private val binding: EpisodesHorizontalItemBinding): Holder(binding.root){
+
+        override fun bind(episode: Episode, onPickListener: ((Episode) -> Unit)?) = with(binding) {
+            this.episode.text = episode.episode
+        }
+
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val binding = EpisodesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return Holder(binding)
+        val holder = when(orientation){
+            Orientation.HORIZONTAL -> {
+                HolderHorizontal(EpisodesHorizontalItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            }
+            Orientation.VERTICAL -> {
+                HolderVertical(EpisodesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            }
+        }
+        return holder
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -38,6 +65,10 @@ class EpisodesAdapter: RecyclerView.Adapter<EpisodesAdapter.Holder>() {
     fun update(newEpisodes: List<Episode>){
         episodes = newEpisodes
         notifyDataSetChanged()
+    }
+
+    fun addOnPickListener(onPick: (Episode) -> Unit){
+        onPickListener = onPick
     }
 
 }

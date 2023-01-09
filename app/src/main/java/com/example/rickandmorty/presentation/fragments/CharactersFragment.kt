@@ -1,10 +1,8 @@
 package com.example.rickandmorty.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
-import android.widget.ResourceCursorAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +35,7 @@ class CharactersFragment: BaseFragment<FragmentCharactersBinding, CharactersPres
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setUI() = with(binding) {
+        adapter.addOnPickCharacter { presenter.onPickCharacter(it) }
         val itemDecoration = DividerItemDecoration(this@CharactersFragment.context, LinearLayoutManager.VERTICAL).also {
             it.setDrawable(resources.getDrawable(R.drawable.characters_item_divider))
         }
@@ -80,6 +79,10 @@ class CharactersFragment: BaseFragment<FragmentCharactersBinding, CharactersPres
 
     override fun onToast(message: String) {
         Toast.makeText(this@CharactersFragment.context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onNavigateTo(destination: Int) {
+        navigateTo(destination)
     }
 
 }

@@ -20,4 +20,10 @@
         <item name="android:titleTextColor">@color/black</item>
     </style>
 
+    <style name="AppTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

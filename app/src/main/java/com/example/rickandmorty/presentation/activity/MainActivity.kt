@@ -2,6 +2,8 @@ package com.example.rickandmorty.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -32,6 +34,15 @@ class MainActivity : AppCompatActivity() {
         )
         toolbar.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navigation.setupWithNavController(navController)
+
+        //navigation.setupWithNavController(navController) работает так себе
+        navigation.setOnItemSelectedListener { item ->
+            when(item.itemId){
+                R.id.charactersFragment -> navController.navigate(R.id.charactersFragment)
+                R.id.locationsFragment -> navController.navigate(R.id.locationsFragment)
+                R.id.episodesFragment -> navController.navigate(R.id.episodesFragment)
+            }
+            true
+        }
     }
 }
